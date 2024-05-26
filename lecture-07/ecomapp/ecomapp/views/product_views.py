@@ -1,11 +1,15 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ecomapp.models import Product
-from ecomapp.serializers import ProductSerializer
+from ecomapp.models import Product,Dairyproduct
+from ecomapp.serializers import ProductSerializer, DairyProductSerializer
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateAPIView
 
 class ListCreateProductAPIView(APIView):
     def get(self, request):
-        products = Product.objects.all()
+        # products = Product.objects.all().filter(price__gte=30)
+        # products = Product.objects.all().filter(price__gte=30).first()
+        products = Product.objects.raw("select * from ecomapp_product;")
+        '''when passing list many=True is mandatory'''
         serialized = ProductSerializer(products, many=True)
         return Response(serialized.data, status=200)
 
@@ -21,4 +25,12 @@ class ListCreateProductAPIView(APIView):
         #     price=data['price'],
         #     description=data['description']
         # )
-        # return Response({"product":product})
+
+class DairyListCreateAPIView(ListCreateAPIView):
+    queryset = Dairyproduct.objects.all()
+    serializer_class = DairyProductSerializer
+
+class RetrieveUpdateAPIViewDairyAPIView(RetrieveUpdateAPIView):
+    queryset = Dairyproduct.objects.all()
+    serializer_class = DairyProductSerializer
+

@@ -1,1 +1,1 @@
-from .product_views import ListCreateProductAPIView
+from .product_views import ListCreateProductAPIView, DairyListCreateAPIView, RetrieveUpdateAPIViewDairyAPIView
